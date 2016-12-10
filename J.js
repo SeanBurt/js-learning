@@ -59,4 +59,23 @@
 		return aKeys;
 	};
 	/******cookie end******/
+	
+	//获取屏幕可视窗口大小
+	J.getVisibleScreen = function() {
+		let h = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight,
+			w = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+		return {
+			'screenWidth': w,
+			'screenHeight': h
+		};
+	};
+	//获取滚动条滚动的距离
+	J.getScrollDistance = function() {
+		let y = window.pagYoffset || document.documentElement.scrollTop || document.body.scrollTop,
+			x = window.pagXoffset || document.documentElement.scrollLeft || document.body.scrollLeft;
+		return {
+			'scrollX': x,
+			'scrollY': y
+		};
+	};
 })(window);
