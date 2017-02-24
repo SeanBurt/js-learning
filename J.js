@@ -14,6 +14,16 @@
 	J.emptyArray = function(arr) {
 		arr = [];
 	};
+	J.distinctArray = function(arr){
+		var o = {};
+	    	if (Array.isArray(arr) && arr.length > 0) {
+			for (var i = 0, l = arr.length; i < l; i++) {
+		    		o[arr[i]] = arr[i];
+			}
+			return Object.keys(o);
+	    	}
+	   	return [];
+	};
 	/******array end******/
 	
 	/******cookie start******/
