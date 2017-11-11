@@ -337,3 +337,296 @@ var o1 = new ProxcySingleton(Person,"man"),
 console.log(o1===o2);
 ```
 ### 通用惰性单例
+```
+var getSingle = function(ctor) {
+    var ret = null;
+    return function() {
+        return ret || (ret = ctor.apply(this,arguments));
+    }
+}
+```
+## 策略模式
+### 定义一个基于策略模式的程序至少由两部分组成。第一个部分是一组策略类，策略类封装了具体的算法，并负责具体的计算过程。第二个部分是环境类Context，Context接受客户的请求，随后把请求委托给某一个策略类。要做到这点，说明Context中要维持对某个策略对象的引用。
+### 使用场景
+```
+//公司奖金发放 策略模式(策略计算方式可变，策略应用场景不变)
+let strategies = {
+    S:salary=>salary*4,
+    A:salary=>salary*3,
+    B:salary=>salary*2
+}
+const calculateBonus = (level,salary)=>strategies[level](salary)
+console.log(calculateBonus('S', 20000));
+//缓动算法
+let tween = {
+    linear:(t, b, c, d)=>{
+        return c*t/d + b
+    },
+    easeIn:(t, b, c, d)=>{
+        return c * ( t /= d ) * t + b
+    },
+    strongEaseIn:(t, b, c, d)=>{
+        return c * ( t /= d ) * t * t * t * t + b
+    },
+    strongEaseOut:(t, b, c, d)=>{
+        return c * ( ( t = t / d - 1) * t * t * t * t + 1 ) + b
+    },
+    sineaseIn:(t, b, c, d )=>{
+        return c * ( t /= d) * t * t + b
+    },
+    sineaseOut:(t,b,c,d)=>{
+        return c * ( ( t = t / d - 1) * t * t + 1 ) + b
+    }
+}
+const Animate = function(dom){
+    this.dom = dom;
+    this.startTime = 0;
+    this.startPos = 0;
+    this.endPos = 0;
+    this.propertyName = null;
+    this.easing = null;
+    this.duration = null;
+}
+Animate.prototype.start = function(propertyName,endPos,duration,easing){
+    this.startTime = +new Date;
+    this.startPos = this.dom.getBoundingClientRect()[propertyName];
+    this.propertyName = propertyName;
+    this.endPos = endPos;
+    this.duration = duration;
+    this.easing = tween[easing];
+    let _self = this;
+    let timeId = setInterval(function(){
+        if(_self.step()===false){
+            clearInterval(timeId);
+        }
+    },19)
+}
+Animate.prototype.step = function(){
+    let t = +new Date;
+    if(t >= this.startTime+this.duration){
+        this.update(this.endPos);
+        return false;
+    }
+    let pos  = this.easing(t - this.startTime, this.startPos, this.endPos - this.startPos, this.duration);
+    this.update(pos);
+}
+Animate.prototype.update = function(pos){
+    this.dom.style[this.propertyName] = pos + "px";
+}
+let div = document.getElementById('div');
+let animate = new Animate(div);
+animate.start('left', 500, 5000, 'sineaseOut');
+//表单验证
+let formStrategies = {
+    isNonEmpty:(val,errMsg)=>{
+        if(val==="") {
+            return errMsg;
+        }
+    },
+    minLength:(val,len,errMsg)=>{
+        if(val.length<len){
+            return errMsg;
+        }
+    },
+    isMobile:(val,errMsg)=>{
+        if(!/(^1[3|5|8][0-9]{9}$)/.test(val)){
+            return errMsg;
+        }
+    }
+}
+const Validator = function(){
+    this.cache = [];
+}
+Validator.prototype.add = function(dom, rules){
+    let _self = this;
+    for(let i=0,rule;rule=rules[i++];){
+        (function(rule){
+            let strategyAry = rule.strategy.split(":"),
+                errorMsg = rule.errorMsg;
+            _self.cache.push(function(){
+                let strategy = strategyAry.shift();
+                strategyAry.unshift(dom.value);
+                strategyAry.push(errorMsg);
+                return formStrategies[strategy].apply(dom, strategyAry);
+            })
+        })(rule)
+    }
+}
+Validator.prototype.start = function(){
+    for(let i=0,validatorFunc;validatorFunc = this.cache[ i++ ];){
+        var msg = validatorFunc();
+        if(msg){
+            return msg;
+        }
+    }
+}
+var registerForm = document.getElementById('registerForm');
+let validataFunc = (registerForm)=>{
+    let validator = new Validator();
+    validator.add(registerForm.userName,[{
+            strategy:"isNonEmpty",
+            errorMsg:"用户名不能为空"
+        },{
+            strategy:"minLength:6",
+            errorMsg:"密码长度不能少于6位"
+    }]);
+    validator.add(registerForm.password,[{
+        strategy:"minLength:6",
+        errorMsg:"密码长度不能少于6位"
+    }]);
+    validator.add(registerForm.phoneNumer,[{
+        strategy:"isMobile",
+        errorMsg:"手机号码格式不正确"
+    }]);
+    let errMsg = validator.start();
+    return errMsg;
+}
+registerForm.onsubmit = function(){
+    let errMsg = validataFunc(registerForm);
+    if (errorMsg){
+        alert ( errorMsg );
+        return false; 
+    }
+}
+```
+## 代理模式
+### 定义
+代理模式是为一个对象提供一个代用品或占位符，以便控制对它的访问。
+### 应用场景
+```
+//虚拟代理实现图片预加载
+let myImage = (function(){
+    let imgNode = document.createElement("img");
+    document.body.appendChild(imgNode);
+    return {
+        setSrc:function(src){
+            imgNode.src = src;
+        }
+    }
+})()
+let proxyImage = (function(){
+    let img = new Image;
+    img.onload = function(){
+        myImage.setSrc(this.src);
+    }
+    return {
+        setSrc:function(src){
+            myImage.setSrc("img/beijing.jpg");
+            img.src = src;
+        }
+    }
+})()
+proxyImage.setSrc('//www.baidu.com/img/baidu_jgylogo3.gif');
+//直接返回函数
+let myImage = (function(){
+    let imgNode = document.createElement("img");
+    document.body.appendChild(imgNode);
+    return function(src){
+        imgNode.src = src;
+    }
+})()
+let proxyImage = (function(){
+    let img = new Image;
+    img.onload = function(){
+        myImage(this.src);
+    }
+    return function(src){
+        myImage("img/beijing.jpg");
+        img.src = src;
+    }
+})()
+proxyImage('//www.baidu.com/img/baidu_jgylogo3.gif');
+//虚拟代理合并http请求
+let syncFile = function(id) {
+    console.log("开始同步文件，id为：" + id);
+}
+let proxcySyncFile = (function(){
+    let cache = [],
+        timer = null;
+    return function(id){
+        cache.push(id);
+        if(timer) {
+            return;
+        }
+        timer = setTimeout(function(){
+            syncFile(cache.join(","));
+            clearTimeout(timer);
+            timer = null;
+            cache.length = 0;
+        },2000);
+    }
+})()
+//虚拟代理在惰性加载中的应用
+let miniConsole = (function(){
+    let cache = [],
+        handler = function(ev){
+            debugger
+            if(ev.keyCode === 113) {
+                let script = document.createElement("script");
+                script.onload = function(){
+                    for(let i=0,fn;fn=cache[i++];) {
+                        fn();
+                    }
+                };
+                script.src = "js/miniconsole.js";
+                document.getElementsByTagName("head")[0].appendChild(script);
+                document.body.removeEventListener("keydown",handler);
+            }
+        };
+    document.body.addEventListener("keydown",handler,false);
+    return {
+        log:function(){
+            let args = arguments;
+            cache.push(function(){
+                return miniConsole.log.apply(miniConsole,args);
+            });
+        }
+    }
+})()
+miniConsole.log(11);
+//miniconsole.js代码
+miniConsole = {
+    log:function(){
+        console.log(Array.prototype.join.call(arguments));
+    }
+};
+//缓存代理：为一些开销大的运算结果提供暂时的存储
+const mult = function(){
+    console.log("calculate...");
+    let ret = 1;
+    for(let i=0,l=arguments.length;i<l;i++){
+        ret*=arguments[i];
+    }
+    return ret;
+}
+const proxyMult = (function(){
+    let cache = {};
+    return function(){
+        let args = Array.prototype.join.call(arguments,",");
+        if(args in cache) {
+            return cache[args];
+        }
+        return cache[args] = mult.apply(this,arguments);
+    }
+})()
+console.log(proxyMult(1,2,3,4,5));
+console.log(proxyMult(1,2,3,4,5));
+//创建缓存代理工厂
+const createProxcyFactory = function(fn){
+    let cache = {};
+    return function(){
+        let args = Array.prototype.join.call(arguments,",");
+        if(args in cache){
+            return cache[args];
+        }
+        return cache[args] = fn.apply(this,arguments);
+    }
+}
+let multProxcy = createProxcyFactory(mult);
+console.log(multProxcy(1,2,3,4,5,6));
+console.log(multProxcy(1,2,3,4,5,6));
+```
+## 迭代器模式
+### 定义
+迭代器模式提供一种顺序访问一个聚合对象中的各个元素，而又不暴露该对象的内部表示。
+### 场景
