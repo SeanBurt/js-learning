@@ -10,3 +10,22 @@ new Promise((resolve)=>{
   console.log('then function start')
 })
 console.log('code execute end')
+
+setTimeout(()=>{
+  setTimeout(()=>{
+    console.log('timer 1')
+  },0)
+},0)
+setTimeout(()=>{
+  setTimeout(()=>{
+    console.log('timer 2')
+  },0)
+})
+new Promise((resolve)=>{
+  setTimeout(()=>{
+    resolve()
+  },0)
+}).then(()=>{
+  console.log('timer 3')
+})
+console.log('code end')
