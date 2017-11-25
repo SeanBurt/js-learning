@@ -54,3 +54,15 @@ new Promise((resolve)=>{
   })
 })
 console.log('code end')
+
+//example 4
+new Promise((resolve)=>{
+  console.log('promise start')
+  say(hello);
+  resolve();
+}).then(()=>{
+  console.log('promise end')
+})
+function say(fn){console.log('say');fn()}
+function hello(){console.log('hello')}
+
