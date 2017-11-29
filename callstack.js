@@ -52,3 +52,18 @@ try{
     }
     return 'func end'
 })()
+
+//example 5
+(()=>{
+    let tmp = 'func end'
+    try{
+      console.log('try start')
+      tmp = JSON.parse([])
+      return 'try'
+    }catch(ex){
+      console.error('inner',ex.message)
+    }finally{
+      console.log('try end')
+    }
+    return tmp
+})()
