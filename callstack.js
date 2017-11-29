@@ -36,3 +36,19 @@ try{
       return 'finally'
     }
 })()
+
+//example 4
+(()=>{
+    try{
+      console.log('try start')
+      throw new Error('test error')
+      return 'try'
+    }catch(ex){
+      console.error('inner',ex.message)
+      return 'catch'
+    }finally{
+      console.log('try end')
+      return 'finally'
+    }
+    return 'func end'
+})()
