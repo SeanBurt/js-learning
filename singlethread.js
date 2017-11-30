@@ -66,3 +66,17 @@ new Promise((resolve)=>{
 function say(fn){console.log('say');fn()}
 function hello(){console.log('hello')}
 
+//example 5
+const myFirstPromise = new Promise((resolve, reject) => {
+    //resolve(123);
+    reject(234);
+});
+myFirstPromise.then(function(res){
+    alert(1);
+    throw new Error("bcd");
+},function(res){
+    alert(res);
+    throw new Error("feb");
+}).catch(function(err){
+    alert(2)
+})
