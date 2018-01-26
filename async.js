@@ -1,3 +1,6 @@
+/**
+ * 多个异步事件调用
+ */
 const wait1 = () => {
     console.log('wait1')
 }
@@ -20,3 +23,37 @@ const callWaiter2 = async () => {
   callWaiter1()
   callWaiter2()
 })()
+
+/**
+ * 异步事件的捕获处理
+ */
+const waiter = async (isBusy) => {
+  console.log('waiter start')
+  if (isBusy) {
+    return Promise.reject('waiter error')
+  } else {
+    return Promise.resolve('waiter end')
+  }
+}
+const callWaiter = async (isErr) => {
+  console.log('calll waiter start')
+  await waiter(1)
+    .then((info) => {
+      console.log(info)
+    })
+    .catch((err) => {
+      console.error(err)
+    })
+  if (isErr) {
+    return Promise.reject('calll waiter error')
+  } else {
+    return Promise.resolve('calll waiter end')
+  }
+}
+callWaiter(1)
+    .then((info) => {
+      console.log(info)
+    })
+    .catch((err) => {
+      console.error(err)
+    })
