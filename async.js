@@ -57,3 +57,27 @@ callWaiter(1)
     .catch((err) => {
       console.error(err)
     })
+
+/*
+* promise 异步处理
+*/
+const callWaiter = () => {
+  console.log('call waiter start')
+  return new Promise((resolve, reject) => {
+    console.log('promise start')
+    resolve('done')
+    console.log('promise end')
+  })
+}
+callWaiter().then((value) => {
+  console.log(value)
+}, (err) => {
+  console.log(err)
+})
+console.log('call waiter end')
+callWaiter().then((value) => {
+  console.log(value)
+}, (err) => {
+  console.log(err)
+})
+console.log('call waiter end')
