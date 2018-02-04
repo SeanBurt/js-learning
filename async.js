@@ -22,6 +22,7 @@ const callWaiter2 = async () => {
 (()=>{
   callWaiter1()
   callWaiter2()
+  console.log('end')
 })()
 
 /**
