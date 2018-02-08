@@ -1,3 +1,12 @@
+/*
+* async 返回值
+*/
+async function a () {
+  return 1
+}
+console.log(a())
+a().then((res)=>{console.log(res)})
+
 /**
  * 多个异步事件调用
  */
