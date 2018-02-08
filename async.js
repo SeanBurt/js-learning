@@ -7,6 +7,16 @@ async function a () {
 console.log(a())
 a().then((res)=>{console.log(res)})
 
+/*
+* await 获取返回值
+*/
+async function b () {
+  return 2
+}
+(async () => {
+  console.log(await b())
+})()
+
 /**
  * 多个异步事件调用
  */
