@@ -101,3 +101,16 @@ callWaiter().then((value) => {
   console.log(err)
 })
 console.log('call waiter end')
+
+// promise callstack
+new Promise(resolve => {
+  resolve(8)
+}).then(t => {console.log(t)})
+new Promise(resolve => {
+  resolve(1)
+  Promise.resolve().then(() => {console.log(2)})
+  Promise.resolve().then(() => {console.log(5)})
+  window.setTimeout(()=>{console.log(7)}, 0)
+  console.log(4)
+}).then(t => console.log(t)).then(() => {console.log(6)})
+console.log(3)
