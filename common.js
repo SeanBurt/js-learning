@@ -1,12 +1,12 @@
 // 字符串全部替换正则版
-function replaceAll1 (val, str) {
-  var regx = new RegExp(`^${str}$`, 'g')
-  return val.replace(regx, '')
+function replaceAll (val, str, replaceStr) {
+  let regx = new RegExp(`${str}`, 'g')
+  return val.replace(regx, replaceStr)
 }
 
 // 字符串全部替换split版
-function replaceAll2 (val, str) {
-  return val.split(str).join('')
+function replaceAll2 (val, str, replaceStr) {
+  return val.split(str).join(replaceStr)
 }
 
 // 用setTimeout实现setInterval
