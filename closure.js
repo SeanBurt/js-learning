@@ -35,3 +35,13 @@ function func3 () {
   }
 }
 func3()
+
+function func4 () {
+  for(var i=0;i<3;i++) {
+    let ii = i
+    setTimeout(function(){
+      console.log(ii)
+    })
+  }
+}
+func4()
