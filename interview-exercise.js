@@ -33,3 +33,18 @@ function func2 (o) {
 console.log(o1.name);
 func1(o1);
 console.log(o1.name);
+
+// 类型判断
+const obj = {
+  i: 0,
+  toString: function () {
+      return this.i++;
+  }
+};
+obj.i++;
+if (obj == 1 && obj ==2 && obj == 3) {
+  console.log(obj.i);
+}
+
+// map and parseInt
+['1', '2', '3'].map(parseInt);
