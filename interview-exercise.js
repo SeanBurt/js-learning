@@ -31,7 +31,7 @@ function func2 (o) {
   o.name = 'mr lee';
 }
 console.log(o1.name);
-func1(o1);
+func2(o1);
 console.log(o1.name);
 
 // 类型判断
@@ -48,3 +48,23 @@ if (obj == 1 && obj ==2 && obj == 3) {
 
 // map and parseInt
 ['1', '2', '3'].map(parseInt);
+
+// prototype and constructor
+function SuperType () {
+  this.value = true;
+}
+SuperType.prototype.getSuperTypeValue = function () {
+  return this.value;
+}
+function SubType () {
+  this.subValue = true;
+}
+SubType.prototype = new SuperType();
+SubType.prototype.getSubTypeValue = function () {
+  return this.subValue;
+}
+let instance = new SubType();
+instance instanceof SubType;
+instance instanceof SuperType;
+instance.constructor === SubType;
+instance.constructor === SuperType;
