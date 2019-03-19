@@ -1,4 +1,4 @@
-// 类型判断: typeof instanceof Object.prototype.toString.call()
+// judge type: typeof instanceof Object.prototype.toString.call()
 var o = {
   a: 1,
   f: function () {
@@ -7,7 +7,7 @@ var o = {
 }
 console.log(typeof o.a, typeof o.f, typeof o.b, typeof o, typeof null)
 
-// 函数参数传递
+// function parameter passing
 var a = 3;
 function func (a) {
   a = 10;
@@ -34,7 +34,7 @@ console.log(o1.name);
 func2(o1);
 console.log(o1.name);
 
-// 类型判断
+// judge object type
 const obj = {
   i: 0,
   toString: function () {
@@ -68,3 +68,18 @@ instance instanceof SubType;
 instance instanceof SuperType;
 instance.constructor === SubType;
 instance.constructor === SuperType;
+
+// temporal dead zone
+let x = 10;
+function func () {
+  console.log(x);
+  let x = 20;
+  return x * x;
+}
+func();
+
+// NaN null undefined
+null == undefined
+null === undefined
+null == NaN
+NaN == NaN
