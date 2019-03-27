@@ -1,3 +1,4 @@
+// ---1
 // judge type: typeof instanceof Object.prototype.toString.call()
 var o = {
   a: 1,
@@ -7,6 +8,7 @@ var o = {
 }
 console.log(typeof o.a, typeof o.f, typeof o.b, typeof o, typeof null)
 
+// ---2
 // function parameter passing
 var a = 3;
 function func (a) {
@@ -34,6 +36,7 @@ console.log(o1.name);
 func2(o1);
 console.log(o1.name);
 
+// ---3
 // judge object type
 const obj = {
   i: 0,
@@ -46,9 +49,11 @@ if (obj == 1 && obj ==2 && obj == 3) {
   console.log(obj.i);
 }
 
+// ---4
 // map and parseInt
 ['1', '2', '3'].map(parseInt);
 
+// ---5
 // prototype and constructor
 function SuperType () {
   this.value = true;
@@ -69,6 +74,7 @@ instance instanceof SuperType;
 instance.constructor === SubType;
 instance.constructor === SuperType;
 
+// ---6
 // temporal dead zone
 let x = 10;
 function func () {
@@ -78,8 +84,45 @@ function func () {
 }
 func();
 
+// ---7
 // NaN null undefined
 null == undefined
 null === undefined
 null == NaN
 NaN == NaN
+
+// ---8
+// about this (not strict pattern)
+var name = 'the window';
+var obj = {
+  name: 'the object',
+  getName: function () {
+    return function () {
+      return this.name;
+    }
+  }
+};
+console.log(obj.getName()());
+
+var name = 'the window';
+var obj = {
+  name: 'the object',
+  getName: function () {
+    var that = this
+    return function () {
+      return that.name;
+    }
+  }
+};
+console.log(obj.getName()());
+
+var name = 'the window';
+var obj = {
+  name: 'the object',
+  getName: function () {
+    return this.name;
+  }
+};
+console.log(obj.getName());
+console.log((obj.getName)());
+console.log((obj.getName = obj.getName)());
