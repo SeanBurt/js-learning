@@ -126,3 +126,17 @@ var obj = {
 console.log(obj.getName());
 console.log((obj.getName)());
 console.log((obj.getName = obj.getName)());
+
+// ---9
+// recursion
+var i = 0;
+function fn () {
+  i++;
+  if (i < 10) {
+    fn();
+  } else {
+    return i;
+  }
+}
+var result = fn();
+console.log(result);
