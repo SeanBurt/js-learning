@@ -83,3 +83,8 @@ null == undefined
 null === undefined
 null == NaN
 NaN == NaN
+
+// basic packaging type
+let str = "some text";
+str.color = "red";
+console.log(str.color);
