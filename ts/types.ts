@@ -96,9 +96,11 @@ function reverse(x: number | string): number | string {
 
 // 类型断言
 function getLength(something: string | number): number {
-  if ((<string>something).length) {
-    return (<string>something).length;
+  if ((something as string).length) {
+    return (something as string).length;
   } else {
     return something.toString().length;
   }
 }
+console.log(getLength('hello'));
+console.log(getLength(567890));
