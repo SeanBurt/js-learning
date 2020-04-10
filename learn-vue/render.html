@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>vue demo</title>
+  <style>
+    .main {
+      padding-top: 30px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script>
+    const app = new Vue({
+      el: "#app",
+      data: {
+        message: "hello world"
+      },
+      render: function(createElement) {
+        var self = this;
+        return createElement(
+          "div",
+          {
+            attrs: {
+              class: "main"
+            }
+          },
+          [
+            createElement("p", this.message),
+            createElement("p", {},
+              [
+                "v-model ",
+                createElement("input", {
+                  domProps: {
+                    type: "text",
+                    value: this.message
+                  },
+                  on: {
+                    input: function (event) {
+                      self.message = event.target.value;
+                    }
+                  }
+                })
+              ]
+            ),
+            createElement("p", {},
+              [
+                "v-bind:value ",
+                createElement("input", {
+                  domProps: {
+                    type: "text",
+                    value: this.message
+                  }
+                })
+              ]
+            ),
+            createElement("p", {},
+              [
+                ":value ",
+                createElement("input", {
+                  domProps: {
+                    type: "text",
+                    value: this.message
+                  }
+                })
+              ]
+            )
+          ]
+        )
+      }
+    })
+  </script>
+</body>
+</html>

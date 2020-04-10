@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>vue demo</title>
+  <style>
+    #app {
+      padding-top: 30px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <p v-for="item in pages" :key="item.id"><a :href="item.href">{{item.text}}</a></p>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script>
+    const app = new Vue({
+      el: "#app",
+      data: {
+        pages: [
+          {
+            id: 0,
+            href: "template.html",
+            text: "template"
+          },
+          {
+            id: 1,
+            href: "render.html",
+            text: "render"
+          },
+          {
+            id: 2,
+            href: "getset.html",
+            text: "getset"
+          }
+        ]
+      }
+    })
+  </script>
+</body>
+</html>
