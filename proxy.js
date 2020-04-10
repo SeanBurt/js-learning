@@ -46,3 +46,60 @@ class Person {
 const mike = new Person('mike', 18);
 console.log(mike.name, mike.age);
 mike.age = "20";
+
+// Object.defineProperty()
+const object1 = {};
+Object.defineProperty(object1, "property1", {
+  value: 42,
+  writable: false
+})
+console.log(object1.property1);
+object1.property1 = 72;
+console.log(object1.property1);
+
+var o = {};
+Object.defineProperty(o, "a", {
+  value: 37,
+  writable: true,
+  enumerable: true,
+  configurable: true
+});
+console.log(o.a);
+
+var bValue;
+Object.defineProperty(o, "b", {
+  get() {
+    return bValue;
+  },
+  set(newValue) {
+    bValue = newValue;
+  },
+  configurable: true,
+  enumerable: true
+})
+console.log(o.b);
+bValue = 38;
+console.log(o.b);
+
+function Archiver() {
+  var temperature = null;
+  var archive = [];
+  
+  Object.defineProperty(this, "temperature", {
+    get() {
+      console.log("get");
+      return temperature;
+    },
+    set(value) {
+      temperature = value;
+      archive.push({val: temperature});
+    }
+  });
+  this.getArchive = function() { return archive; };
+}
+
+var arc = new Archiver();
+arc.temperature = 11;
+console.log(arc.temperature);
+arc.temperature = 12;
+console.log(arc.temperature, arc.getArchive());
