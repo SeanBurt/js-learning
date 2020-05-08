@@ -15,6 +15,14 @@
   <div id="app"></div>
   <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
   <script>
+    Vue.component("button-counter", {
+      data: function () {
+        return {
+          count: 0
+        }
+      },
+      template: `<button v-on:click="count++">You clicked me {{ count }} times</button>`
+    })
     const app = new Vue({
       el: "#app",
       data: {
@@ -25,6 +33,7 @@
         <p>v-model <input type="text" v-model="message"></p>
         <p>v-bind:value <input type="text" v-bind:value="message"></p>
         <p>:value <input type="text" :value="message"></p>
+        <button-counter></button-counter>
       </div>`
     })
   </script>
