@@ -7,8 +7,8 @@ let objProxy = new Proxy(obj, {
   set(target, propKey, value, receiver) {
     console.log(`setting ${propKey}!`);
     return Reflect.set(target, propKey, value, receiver);
-  }
-})
+  },
+});
 objProxy.count = 1;
 console.log(objProxy.count);
 
@@ -25,7 +25,7 @@ function createValidator(target, validator) {
           throw Error(`${propKey} is not a valid property!`);
         }
       }
-    }
+    },
   });
 }
 const personValidators = {
@@ -34,8 +34,8 @@ const personValidators = {
   },
   age(val) {
     return typeof val === "number";
-  }
-}
+  },
+};
 class Person {
   constructor(name, age) {
     this.name = name;
@@ -43,7 +43,7 @@ class Person {
     return createValidator(this, personValidators);
   }
 }
-const mike = new Person('mike', 18);
+const mike = new Person("mike", 18);
 console.log(mike.name, mike.age);
 mike.age = "20";
 
@@ -51,8 +51,8 @@ mike.age = "20";
 const object1 = {};
 Object.defineProperty(object1, "property1", {
   value: 42,
-  writable: false
-})
+  writable: false,
+});
 console.log(object1.property1);
 object1.property1 = 72;
 console.log(object1.property1);
@@ -62,7 +62,7 @@ Object.defineProperty(o, "a", {
   value: 37,
   writable: true,
   enumerable: true,
-  configurable: true
+  configurable: true,
 });
 console.log(o.a);
 
@@ -75,8 +75,8 @@ Object.defineProperty(o, "b", {
     bValue = newValue;
   },
   configurable: true,
-  enumerable: true
-})
+  enumerable: true,
+});
 console.log(o.b);
 bValue = 38;
 console.log(o.b);
@@ -84,7 +84,7 @@ console.log(o.b);
 function Archiver() {
   var temperature = null;
   var archive = [];
-  
+
   Object.defineProperty(this, "temperature", {
     get() {
       console.log("get");
@@ -92,10 +92,12 @@ function Archiver() {
     },
     set(value) {
       temperature = value;
-      archive.push({val: temperature});
-    }
+      archive.push({ val: temperature });
+    },
   });
-  this.getArchive = function() { return archive; };
+  this.getArchive = function () {
+    return archive;
+  };
 }
 
 var arc = new Archiver();
