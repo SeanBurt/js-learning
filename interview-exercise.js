@@ -185,3 +185,113 @@ console.log(b.toString());
 let arr = [1, 2, 3, 3];
 let resultarr = [...new Set(arr)];
 console.log(resultarr);
+
+// ---12
+// EventEmitter
+class Event {
+  constructor() {
+    this._cache = [];
+  }
+  on(type, callback) {
+    let fns = (this._cache[type] = this._cache[type] || []);
+    if (fns.indexOf(callback) === -1) {
+      fns.push(callback);
+    }
+    return this;
+  }
+  trriger(type, data) {
+    let fns = this._cache[type];
+    if (Array.isArray(fns)) {
+      fns.forEach((fn) => fn(data));
+    }
+    return this;
+  }
+  off(type, callback) {
+    let fns = this._cache[type];
+    if (Array.isArray(fns)) {
+      if (callback) {
+        let index = fns.indexOf(callback);
+        if (index !== -1) {
+          fns.splice(index, 1);
+        }
+      } else {
+        fns.length = 0;
+      }
+    }
+    return this;
+  }
+  once(type, callback) {
+    let wrapFun = () => {
+      callback.call(this);
+      this.off(type, wrapFun);
+    };
+    this.on(type, wrapFun);
+    return this;
+  }
+}
+let e = new Event();
+e.on("click", function (data) {
+  console.log(data);
+});
+e.trriger("click", "666");
+console.log(e);
+
+// ---13
+// Promise
+new Promise((resolve, reject) => {
+  reject();
+  resolve();
+})
+  .then((res) => {
+    console.log("success1", res);
+  })
+  .catch((err) => {
+    console.log("error1", err);
+  })
+  .then((res) => {
+    console.log("success2", res);
+  });
+
+// ---14
+// 广度递归
+// 写一个方法打印如下结构 name
+// 要求打印顺序为 root, child_0, child_1, child_0_0, child_1_0
+const data = {
+  name: "root",
+  children: [
+    {
+      name: "child_0",
+      children: [
+        {
+          name: "child_0_0",
+          children: [],
+        },
+      ],
+    },
+    {
+      name: "child_1",
+      children: [
+        {
+          name: "child_1_0",
+          children: [],
+        },
+      ],
+    },
+  ],
+};
+function breadthTraval(self) {
+  if (!self) {
+    return;
+  }
+  let queue = [];
+  let node = null;
+  queue.push(self);
+  while (queue.length) {
+    node = queue.shift();
+    console.log(node.name);
+    if (node.children.length) {
+      node.children.forEach((item) => queue.push(item));
+    }
+  }
+}
+breadthTraval(data);
