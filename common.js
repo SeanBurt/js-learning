@@ -25,23 +25,25 @@ function mySetInterval(callback, duration, count) {
 }
 
 // 防抖
-function debounce(fn, wait = 0, options = {}) {
+function debounce(fn, wait = 500) {
   let timerId = null;
 
-  function debounced() {
+  return function () {
+    let self = this;
+    let args = arguments;
+
     if (timerId) {
       clearTimeout(timerId);
       timerId = null;
     }
     timerId = setTimeout(function () {
-      fn();
+      fn.apply(self, args);
     }, wait);
-  }
-  return debounced;
+  };
 }
 
 // 截流
-function throttle(fn, threshhold) {
+function throttle(fn, threshold = 500) {
   let timer = null;
   let last = null;
 
@@ -52,7 +54,7 @@ function throttle(fn, threshhold) {
     const now = +new Date();
     // 如果之前有执行过并且距离上次执行时间小于阈值，则延迟剩余时间后再执行
     // 保证执行间隔大于阈值
-    const remaining = last ? last + threshhold - now : 0;
+    const remaining = last ? last + threshold - now : 0;
     if (remaining > 0) {
       clearTimeout(timer);
 

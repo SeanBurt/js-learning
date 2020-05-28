@@ -1,6 +1,6 @@
 // ---1
 // judge type: typeof instanceof Object.prototype.toString.call()
-var o = {
+let o = {
   a: 1,
   f: function () {
     console.log("f");
@@ -10,7 +10,7 @@ console.log(typeof o.a, typeof o.f, typeof o.b, typeof o, typeof null);
 
 // ---2
 // function parameter passing
-var a = 3;
+let a = 3;
 function func(a) {
   a = 10;
   console.log(a);
@@ -18,7 +18,7 @@ function func(a) {
 func();
 console.log(a);
 
-var o = {};
+let o = {};
 function func1(o) {
   o.name = "mr li";
 }
@@ -26,7 +26,7 @@ console.log(o.name);
 func1(o);
 console.log(o.name);
 
-var o1 = {};
+let o1 = {};
 function func2(o) {
   o.name = "mr li";
   o = new Object();
@@ -94,8 +94,8 @@ NaN === NaN;
 
 // ---8
 // about this (not strict pattern)
-var name = "the window";
-var obj = {
+let name = "the window";
+let obj = {
   name: "the object",
   getName: function () {
     return function () {
@@ -105,11 +105,11 @@ var obj = {
 };
 console.log(obj.getName()());
 
-var name = "the window";
-var obj = {
+let name = "the window";
+let obj = {
   name: "the object",
   getName: function () {
-    var that = this;
+    let that = this;
     return function () {
       return that.name;
     };
@@ -117,8 +117,8 @@ var obj = {
 };
 console.log(obj.getName()());
 
-var name = "the window";
-var obj = {
+let name = "the window";
+let obj = {
   name: "the object",
   getName: function () {
     return this.name;
@@ -130,7 +130,7 @@ console.log((obj.getName = obj.getName)());
 
 // ---9
 // recursion
-var i = 0;
+let i = 0;
 function fn() {
   i++;
   if (i < 10) {
@@ -139,7 +139,7 @@ function fn() {
     return i;
   }
 }
-var result = fn();
+let result = fn();
 console.log(result);
 
 // ---10
@@ -178,8 +178,8 @@ Array.prototype.distinct1 = function () {
   }
   return result;
 };
-var a = [1, 2, 3, 4, 5, 6, 5, 3, 2, 4, 56, 4, 1, 2, 1, 1, 1, 1, 1, 1];
-var b = a.distinct1();
+let a = [1, 2, 3, 4, 5, 6, 5, 3, 2, 4, 56, 4, 1, 2, 1, 1, 1, 1, 1, 1];
+let b = a.distinct1();
 console.log(b.toString());
 
 let arr = [1, 2, 3, 3];
@@ -237,7 +237,7 @@ e.trriger("click", "666");
 console.log(e);
 
 // ---13
-// Promise
+// Promise 状态改变
 new Promise((resolve, reject) => {
   reject();
   resolve();
@@ -295,3 +295,108 @@ function breadthTraval(self) {
   }
 }
 breadthTraval(data);
+
+// ---15
+// array flat
+let ary = [1, [2, 3], [4, [5, 6], 7], 8];
+console.log("flat depth 1: ", ary.flat());
+console.log("flat depth 2: ", ary.flat(2));
+console.log("flat depth any: ", ary.flat(Infinity));
+
+// 单层深度实现
+const flattened = (arr) => [].concat(...arr);
+console.log(flattened(ary));
+function flat1(ary) {
+  return ary.reduce((acc, val) => acc.concat(val), []);
+}
+console.log(flat1(ary));
+
+// 多层深度实现
+function flatDeep(arr, d = 1) {
+  return d > 0
+    ? arr.reduce(
+        (acc, val) =>
+          acc.concat(Array.isArray(val) ? flatDeep(val, d - 1) : val),
+        []
+      )
+    : arr.slice();
+}
+console.log(flatDeep(ary, Infinity));
+const eachFlat = (arr = [], depth = 1) => {
+  const result = []; // 缓存递归结果
+  // 开始递归
+  (function flat(arr, depth) {
+    // forEach 会自动去除数组空位
+    arr.forEach((item) => {
+      // 控制递归深度
+      if (Array.isArray(item) && depth > 0) {
+        // 递归数组
+        flat(item, depth - 1);
+      } else {
+        // 缓存元素
+        result.push(item);
+      }
+    });
+  })(arr, depth);
+  // 返回递归结果
+  return result;
+};
+console.log(eachFlat(ary, Infinity));
+
+// ---16
+// Promise.all() 实现
+const promise1 = Promise.resolve(3);
+const promise2 = 42;
+const promise3 = new Promise((resolve, reject) => {
+  setTimeout(resolve, 100, "foo");
+});
+Promise.all([promise1, promise2, promise3]).then((values) => {
+  console.log(values);
+});
+
+Promise.all = function (promises) {
+  let results = [];
+  let promiseCount = 0;
+  let promisesLength = promises.length;
+  return new Promise(function (resolve, reject) {
+    for (let val of promises) {
+      Promise.resolve(val).then(
+        function (res) {
+          results[promiseCount] = res;
+          promiseCount++;
+          if (promiseCount === promisesLength) {
+            return resolve(results);
+          }
+        },
+        function (err) {
+          return reject(err);
+        }
+      );
+    }
+  });
+};
+
+Promise.all1 = function (promises) {
+  let results = [];
+  let promiseCount = 0;
+  let promisesLength = promises.length;
+  return new Promise(function (resolve, reject) {
+    for (let val of promises) {
+      Promise.resolve(val).then(
+        function (res) {
+          results[promiseCount] = res;
+          promiseCount++;
+          if (promiseCount === promisesLength) {
+            return resolve(results);
+          }
+        },
+        function (err) {
+          return reject(err);
+        }
+      );
+    }
+  });
+};
+Promise.all1([promise1, promise2, promise3]).then((values) => {
+  console.log(values);
+});
