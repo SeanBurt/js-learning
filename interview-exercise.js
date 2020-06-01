@@ -403,7 +403,7 @@ Promise.all1([promise1, promise2, promise3]).then((values) => {
 
 // ---17
 // call 实现
-Function.prototype.myBind = function (context) {
+Function.prototype.myCall = function (context) {
   let ctx = Object(context) || window;
   ctx.fn = this;
   let args = [...arguments].slice(1);
@@ -414,5 +414,5 @@ Function.prototype.myBind = function (context) {
 function hello() {
   console.log(this, arguments);
 }
-hello.myBind({ a: 1 }, 2, 3);
+hello.myCall({ a: 1 }, 2, 3);
 hello();
