@@ -400,3 +400,19 @@ Promise.all1 = function (promises) {
 Promise.all1([promise1, promise2, promise3]).then((values) => {
   console.log(values);
 });
+
+// ---17
+// call 实现
+Function.prototype.myBind = function (context) {
+  let ctx = Object(context) || window;
+  ctx.fn = this;
+  let args = [...arguments].slice(1);
+  let res = ctx.fn(...args);
+  delete ctx.fn;
+  return res;
+};
+function hello() {
+  console.log(this, arguments);
+}
+hello.myBind({ a: 1 }, 2, 3);
+hello();
