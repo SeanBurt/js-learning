@@ -31,6 +31,7 @@ function func2(o) {
   o.name = "mr li";
   o = new Object();
   o.name = "mr lee";
+  console.log(o.name);
 }
 console.log(o1.name);
 func2(o1);
@@ -416,3 +417,100 @@ function hello() {
 }
 hello.myCall({ a: 1 }, 2, 3);
 hello();
+
+// ---18
+// array slice 实现
+Array.prototype.mySlice = function (num1, num2) {
+  let ary = [];
+  let item1 = Math.abs(num1) > this.length ? 0 : num1;
+  item1 = isNaN(item1)
+    ? 0
+    : item1 < 0
+    ? Math.ceil(item1 + this.length)
+    : Math.floor(item1);
+  let item2 =
+    num2 === undefined && (num1 <= this.length || isNaN(item1))
+      ? this.length
+      : num2 < 0
+      ? Math.ceil(num2 + this.length)
+      : Math.floor(num2);
+  for (let i = item1; i < item2 && i < this.length; i++) {
+    ary[ary.length] = this[i];
+  }
+  return ary;
+};
+let ary = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
+console.log(ary.mySlice(2.7, 7.7));
+console.log(ary.mySlice(1));
+console.log(ary.mySlice(0, -1));
+
+// ---19
+// 观察者模式实现
+<p>点击页面，更新视图</p>;
+class Dep {
+  /* subs 存放观察者 watcher 对象 */
+  constructor() {
+    this.subs = [];
+  }
+  /* 添加观察者 */
+  addSub(sub) {
+    this.subs.push(sub);
+  }
+  /* 通知观察者更新数据 */
+  notify() {
+    console.log("~~~ Dep update ~~~");
+    this.subs.forEach((sub) => {
+      sub.update();
+    });
+  }
+}
+class Watcher {
+  /* new Watcher 时将该对象赋值给 Dep.target，在get中会用到 */
+  constructor() {
+    Dep.target = this;
+  }
+  update() {
+    console.log("~~~ Watcher update views ~~~");
+  }
+}
+function observer(obj) {
+  Object.keys(obj).forEach((key) => {
+    let val = obj[key];
+    const dep = new Dep();
+    Object.defineProperty(obj, key, {
+      enumerable: true,
+      configurable: true,
+      get: function reactiveGetter() {
+        /* 将Dep.target（即当前的 Watcher 对象存入 dep 的 subs 中） */
+        dep.addSub(Dep.target);
+        return val;
+      },
+      set: function (newVal) {
+        if (val === newVal) {
+          return;
+        }
+        /* 在set的时候触发dep的notify来通知所有的Watcher对象更新视图 */
+        val = newVal;
+        dep.notify();
+        console.log("observer 视图更新～");
+      },
+    });
+  });
+}
+class Mvvm {
+  constructor(options) {
+    this._data = options.data;
+    observer(this._data);
+    /* 新建一个Watcher观察者对象，这时候Dep.target会指向这个Watcher对象 */
+    new Watcher();
+    console.log(this._data.name);
+  }
+}
+let o = new Mvvm({
+  data: {
+    name: "mvvm ~",
+  },
+});
+document.body.addEventListener("click", () => {
+  o._data.name = "mvvm update~" + new Date().getTime();
+});
