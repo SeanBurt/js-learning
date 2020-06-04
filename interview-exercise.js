@@ -514,3 +514,26 @@ let o = new Mvvm({
 document.body.addEventListener("click", () => {
   o._data.name = "mvvm update~" + new Date().getTime();
 });
+
+// ---20
+// 青蛙跳台阶 Fibonacci
+// f(n) = f(n-1) + f(n - 2);
+function ways(n) {
+  if (n < 1) {
+    return 0;
+  }
+  if (n < 3) {
+    return n;
+  }
+  let s1 = 1,
+    s2 = 2,
+    s3 = 1;
+  for (let i = 3; i <= n; i++) {
+    s3 = s1 + s2;
+    console.log(s3);
+    s1 = s2;
+    s2 = s3;
+  }
+  return s3;
+}
+console.log(ways(10));
