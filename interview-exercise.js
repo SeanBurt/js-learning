@@ -537,3 +537,19 @@ function ways(n) {
   return s3;
 }
 console.log(ways(10));
+
+// ---21
+// 数组转成嵌套对象
+// ["a","b","c","d"] => {a:{b:{c:{d:null}}}}
+let ary = ["a", "b", "c", "d"];
+function nest(ary) {
+  function nested(key, obj) {
+    return { [key]: obj };
+  }
+  let obj = null;
+  ary.reverse().forEach((item) => {
+    obj = nested(item, obj);
+  });
+  return obj;
+}
+console.log(nest(ary));
