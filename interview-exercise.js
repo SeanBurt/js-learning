@@ -553,3 +553,13 @@ function nest(ary) {
   return obj;
 }
 console.log(nest(ary));
+
+// ---22
+// 类型转换
+// https://stackoverflow.com/questions/5491605/empty-arrays-seem-to-equal-true-and-false-at-the-same-time
+if ([] == false) {
+  console.log('[]');
+}
+if ([]) {
+  console.log('[]');
+}

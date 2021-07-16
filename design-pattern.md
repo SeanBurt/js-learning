@@ -631,3 +631,54 @@ console.log(multProxcy(1,2,3,4,5,6));
 ### 定义
 迭代器模式提供一种顺序访问一个聚合对象中的各个元素，而又不暴露该对象的内部表示。
 ### 场景
+// 实现简易图片播放器
+let imgPlayer = function(imgData, box) {
+    let container = box && document.querySelector(box) || document,
+    img = container.querySelector('img'),
+    len = imgData.length,
+    index = 0;
+    img.src = imgData[0];
+
+    var timer = null;
+
+    return {
+        first: function() {
+            index = 0
+            img.src = imgData[index]
+        },
+        last: function() {
+            index = len - 1
+            img.src = imgData[index]
+        },
+        pre: function() {
+            if(--index > 0) {
+                img.src = imgData[index]
+            }else {
+                index = 0
+                img.src = imgData[index]
+            }
+        },
+        next: function() {
+            if(++index < len) {
+                img.src = imgData[index]
+            }else {
+                index = len - 1
+                img.src = imgData[index]
+            }
+        },
+        play: function() {
+            timer = setInterval(() => {
+                if(index > len - 1) {
+                    index = 0
+                }
+                img.src = imgData[index]
+                index++
+            }, 5000)
+        },
+        stop: function() {
+            clearInterval(timer)
+        }
+    }
+}
+
+let player = new imgPlayer(imgData, '#box')
