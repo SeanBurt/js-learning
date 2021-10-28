@@ -351,6 +351,7 @@ const promise2 = 42;
 const promise3 = new Promise((resolve, reject) => {
   setTimeout(resolve, 100, "foo");
 });
+
 Promise.all([promise1, promise2, promise3]).then((values) => {
   console.log(values);
 });
@@ -376,31 +377,6 @@ Promise.all = function (promises) {
     }
   });
 };
-
-Promise.all1 = function (promises) {
-  let results = [];
-  let promiseCount = 0;
-  let promisesLength = promises.length;
-  return new Promise(function (resolve, reject) {
-    for (let val of promises) {
-      Promise.resolve(val).then(
-        function (res) {
-          results[promiseCount] = res;
-          promiseCount++;
-          if (promiseCount === promisesLength) {
-            return resolve(results);
-          }
-        },
-        function (err) {
-          return reject(err);
-        }
-      );
-    }
-  });
-};
-Promise.all1([promise1, promise2, promise3]).then((values) => {
-  console.log(values);
-});
 
 // ---17
 // call 实现
